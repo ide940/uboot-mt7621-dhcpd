@@ -1,19 +1,22 @@
 # MediaTek MT7621 U-Boot with Failsafe Mode
 
-![Web Recovery Page](WebRecovery.png)
+![Web Recovery Page](uboot.png)
 
 A modified version of DragonBluep's u-boot for mt7621 by Yuzhii.
 
 Support functions and Features:
 
-   - Failsafe Mode with Web Recovery Page
-   - Support light/dark theme
-   - I18n support (English/Chinese)
-   - Auto dhcpd server
-   - Support Web upgrade U-Boot
-   - Can boot Initramfs firmware in Web
+- Failsafe Mode with Web Recovery Page
+- Support light/dark theme
+- I18n support (English/Chinese)
+- Auto dhcpd server
+- Support Web upgrade U-Boot
+- Can boot Initramfs firmware in Web
+- Factory(RF) flash
+- Backup partition and all flash
+- Sysinfo display
 
-Support Actions to build automatically. 
+Support Actions to build automatically.
 
 ## Online Build
 
@@ -27,39 +30,35 @@ Support Actions to build automatically.
 
 ## Local Build
 
-1. Fork This Repository and clone it to local machine.
+- Fork This Repository and clone it to local machine.
 
-2. Install required packages:
+- Install required packages:
 
-   - On Ubuntu22.04:
+On Ubuntu22.04:
 
-     ```bash
-     sudo apt-get install git swig python2-dev
-     sudo rm /usr/bin/python
-     # create a symlink for python2
-     sudo ln -s /usr/bin/python2.7 /usr/bin/python2
-     sudo ln -s /usr/bin/python2.7 /usr/bin/python
-     ```
+```bash
+sudo apt-get install git swig python2-dev
+sudo rm /usr/bin/python
+# create a symlink for python2
+sudo ln -s /usr/bin/python2.7 /usr/bin/python2
+sudo ln -s /usr/bin/python2.7 /usr/bin/python
+```
 
-     > if you want to change back: `sudo rm /usr/bin/python`, `sudo ln -s /usr/bin/python3 /usr/bin/python`
+> if you want to change back: `sudo rm /usr/bin/python`, `sudo ln -s /usr/bin/python3 /usr/bin/python`
 
-3. Get toolchain:
+- Get toolchain:
 
-   ```bash
-   wget -O - https://github.com/DragonBluep/uboot-mt7621/releases/download/20230517/openwrt-toolchain-ramips-mt7621_gcc-12.3.0_musl.Linux-x86_64.tar.xz | tar --xz -xf -
-   ```
+```bash
+wget -O - https://github.com/DragonBluep/uboot-mt7621/releases/download/20230517/openwrt-toolchain-ramips-mt7621_gcc-12.3.0_musl.Linux-x86_64.tar.xz | tar --xz -xf -
+```
 
-   > The toolchain directory and U-Boot source directory should be in the same directory
+> The toolchain directory and U-Boot source directory should be in the same directory
 
-4. Run build script:
+- Run build script:
 
-   ```bash
-   ./build.sh
-   ```
-
-Tips:
-
-If you want to build again, after first build, it will edit or generate some files like `include/configs/mt7621-common.h` and `configs/mt7621_build_defconfig`, if you did't develop or edit the uboot, you can use args `git reset --hard HEAD` to remove these change, then build again.
+```bash
+./build.sh
+```
 
 ## Board Parameters
 
@@ -111,7 +110,7 @@ TTL serial port baud rate, 57600 or 115200
 
    a) Release the button after the status LED blinks at least 1 second  
    (blink 5 times), then you will enter into WebUI recovery mode. You can  
-   open http://192.168.1.1 in the browser to upload firmware.
+   open <http://192.168.1.1> in the browser to upload firmware.
 
    b) Hold the button until the status LED no longer blinks (blink 6 seconds  
    in total), then you will enter into TFTP download mode. You can upload  
