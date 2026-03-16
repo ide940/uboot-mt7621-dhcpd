@@ -133,8 +133,12 @@ jobs:
 
       - name: rename uboot-mt7621
         run: |
-          mv uboot-mt7621/archive/u-boot-mt7621.bin uboot-mt7621/archive/${{ inputs.model }}-${{ steps.timestamp.outputs.now }}_u-boot-mt7621-dhcpd-yuzhii.bin
-          mv uboot-mt7621/archive/u-boot.img uboot-mt7621/archive/${{ inputs.model }}-${{ steps.timestamp.outputs.now }}_u-boot.img
+          BIN_PATH=$(ls uboot-mt7621/archive/u-boot-mt7621_md5-*.bin)
+          IMG_PATH=$(ls uboot-mt7621/archive/u-boot_md5-*.img)
+          MD5BIN=$(echo "$BIN_PATH" | sed -E 's/.*md5-([a-f0-9]+)\.bin$/\1/')
+          MD5IMG=$(echo "$IMG_PATH" | sed -E 's/.*md5-([a-f0-9]+)\.img$/\1/')
+          mv "$BIN_PATH" "uboot-mt7621/archive/${{ inputs.model }}_u-boot-mt7621_md5-${MD5BIN}-${{ steps.timestamp.outputs.now }}.bin"
+          mv "$IMG_PATH" "uboot-mt7621/archive/${{ inputs.model }}_u-boot_md5-${MD5IMG}-${{ steps.timestamp.outputs.now }}.img"
 
       - name: Create Release
         uses: softprops/action-gh-release@v1

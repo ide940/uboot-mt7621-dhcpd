@@ -4,12 +4,25 @@
 Toolchain=$(cd ../openwrt*/toolchain-mipsel*/bin; pwd)'/mipsel-openwrt-linux-'
 Staging=${Toolchain%/toolchain-*}
 
+echo "======================================================================"
+echo "Checking environment..."
+echo "======================================================================"
+
 echo "CROSS_COMPILE=${Toolchain}"
 echo "STAGING_DIR=${Toolchain%/toolchain-*}"
+
+# Check if Python is installed on the system
+echo "Trying python2.7..."
+command -v python2.7
+[ "$?" != "0" ] && { echo "Error: Python2.7 is not installed on this system."; exit 0; }
+
 cd $(dirname "$0")
 
-# Clean mt7621_build_defconfig before generating new one
+echo "======================================================================"
+echo "Clean old build configurations..."
+echo "======================================================================"
 
+# Clean mt7621_build_defconfig before generating new one
 if [ -f "configs/mt7621_build_defconfig" ]; then
 	echo "Removing old mt7621_build_defconfig"
 	rm configs/mt7621_build_defconfig
@@ -19,6 +32,10 @@ if [ -f "include/configs/mt7621-common.h" ]; then
 	echo "Removing old reset button and system led config in mt7621-common.h"
 	sed -i '/__CONFIG_MT7621_RESET_LED/,/#endif/d' include/configs/mt7621-common.h
 fi
+
+echo "======================================================================"
+echo "Configuring build..."
+echo "======================================================================"
 
 # arguments:
 # $1	string: flash type
@@ -149,13 +166,29 @@ elif [ -n "${BOARD_MODEL}" ]; then
 	echo "CONFIG_WEBUI_FAILSAFE_BOARD_NAME=\"${MODEL_ESC}\"" >> ${DEFCONFIG}
 fi
 
+echo "======================================================================"
+echo "Building..."
+echo "======================================================================"
+
 make mt7621_build_defconfig
 make CROSS_COMPILE=${Toolchain} STAGING_DIR=${Staging}
 make savedefconfig
-mkdir archive
+if [ ! -d "archive" ]; then
+	mkdir archive
+fi
 cat defconfig > archive/mt7621_defconfig
-mv u-boot-mt7621.bin archive/
-mv u-boot.img archive/
+MD5SUMBIN=$(md5sum u-boot-mt7621.bin | awk '{print $1}')
+echo "u-boot-mt7621.bin md5sum: ${MD5SUMBIN}"
+mv u-boot-mt7621.bin archive/u-boot-mt7621_md5-${MD5SUMBIN}.bin
+echo "Output:  archive/u-boot-mt7621_md5-${MD5SUMBIN}.bin"
+MD5SUMIMG=$(md5sum u-boot.img | awk '{print $1}')
+echo "u-boot.img md5sum: ${MD5SUMIMG}"
+mv u-boot.img archive/u-boot_md5-${MD5SUMIMG}.img
+echo "Output:  archive/u-boot_md5-${MD5SUMIMG}.img"
+
+echo "======================================================================"
+echo "Cleaning up..."
+echo "======================================================================"
 
 # Clean mt7621_build_defconfig after building
 if [ -f "configs/mt7621_build_defconfig" ]; then

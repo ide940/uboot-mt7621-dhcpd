@@ -280,6 +280,7 @@ interactive() {
 
 summary() {
   cat <<EOF
+======================================================================
 将执行：
   ./customize.sh '${FLASH}' '${MTDPARTS}' '${KERNEL_OFFSET}' '${RESET_PIN}' \
   '${SYSLED_PIN}' '${CPUFREQ}' '${RAMFREQ}' '${DDRPARM}' '${BAUDRATE}' '${MODEL}' '${BOARD_NAME}'
@@ -316,7 +317,8 @@ main() {
   fi
   ./customize.sh "${FLASH}" "${MTDPARTS}" "${KERNEL_OFFSET}" "${RESET_PIN}" \
                  "${SYSLED_PIN}" "${CPUFREQ}" "${RAMFREQ}" "${DDRPARM}" "${BAUDRATE}" "${MODEL}" "${BOARD_NAME}"
-  echo "构建完成。若成功，产物位于 ./archive/。"
+  echo "======================================================================"
+  echo "构建完成。若成功，产物位于 ./archive/ 。"
 }
 
 main "$@"
