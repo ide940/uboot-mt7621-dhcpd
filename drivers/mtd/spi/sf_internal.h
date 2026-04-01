@@ -22,7 +22,10 @@ enum spi_dual_flash {
 enum spi_nor_option_flags {
 	SNOR_F_SST_WR		= BIT(0),
 	SNOR_F_USE_FSR		= BIT(1),
+	SNOR_F_NO_ERASE		= BIT(2),
 	SNOR_F_USE_UPAGE	= BIT(3),
+	SNOR_F_USE_CLSR		= BIT(4),
+	SNOR_F_4B_ADDR		= BIT(5),
 };
 
 #define SPI_FLASH_3B_ADDR_LEN		3
@@ -41,6 +44,8 @@ enum spi_nor_option_flags {
 #define CMD_ERASE_4K			0x20
 #define CMD_ERASE_CHIP			0xc7
 #define CMD_ERASE_64K			0xd8
+#define CMD_ERASE_4K_4B			0x21
+#define CMD_ERASE_64K_4B		0xdc
 
 /* Write commands */
 #define CMD_WRITE_STATUS		0x01
@@ -48,6 +53,8 @@ enum spi_nor_option_flags {
 #define CMD_WRITE_DISABLE		0x04
 #define CMD_WRITE_ENABLE		0x06
 #define CMD_QUAD_PAGE_PROGRAM		0x32
+#define CMD_PAGE_PROGRAM_4B		0x12
+#define CMD_QUAD_PAGE_PROGRAM_4B	0x34
 
 /* Read commands */
 #define CMD_READ_ARRAY_SLOW		0x03
@@ -56,11 +63,16 @@ enum spi_nor_option_flags {
 #define CMD_READ_DUAL_IO_FAST		0xbb
 #define CMD_READ_QUAD_OUTPUT_FAST	0x6b
 #define CMD_READ_QUAD_IO_FAST		0xeb
+#define CMD_READ_ARRAY_SLOW_4B		0x13
+#define CMD_READ_ARRAY_FAST_4B		0x0c
+#define CMD_READ_DUAL_OUTPUT_FAST_4B	0x3c
+#define CMD_READ_QUAD_OUTPUT_FAST_4B	0x6c
 #define CMD_READ_ID			0x9f
 #define CMD_READ_STATUS			0x05
 #define CMD_READ_STATUS1		0x35
 #define CMD_READ_CONFIG			0x35
 #define CMD_FLAG_STATUS			0x70
+#define CMD_CLEAR_STATUS		0x30
 
 /* Bank addr access commands */
 #ifdef CONFIG_SPI_FLASH_BAR
@@ -75,6 +87,8 @@ enum spi_nor_option_flags {
 #define STATUS_QEB_WINSPAN		BIT(1)
 #define STATUS_QEB_MXIC			BIT(6)
 #define STATUS_PEC			BIT(7)
+#define STATUS_E_ERR			BIT(5)
+#define STATUS_P_ERR			BIT(6)
 #define SR_BP0				BIT(2)  /* Block protect 0 */
 #define SR_BP1				BIT(3)  /* Block protect 1 */
 #define SR_BP2				BIT(4)  /* Block protect 2 */
@@ -144,6 +158,21 @@ struct spi_flash_info {
 #define RD_QUADIO		BIT(6)	/* use Quad IO Read */
 #define RD_DUALIO		BIT(7)	/* use Dual IO Read */
 #define RD_FULL			(RD_QUAD | RD_DUAL | RD_QUADIO | RD_DUALIO)
+
+/* Extended compatibility flags for upstream spi-nor-ids entries */
+#define SPI_NOR_DUAL_READ	RD_DUAL
+#define SPI_NOR_QUAD_READ	RD_QUAD
+#define SPI_NOR_OCTAL_READ	BIT(8)
+#define SPI_NOR_OCTAL_DTR_READ	SPI_NOR_OCTAL_READ
+#define SPI_NOR_HAS_LOCK	BIT(9)
+#define SPI_NOR_HAS_TB		SPI_NOR_HAS_LOCK
+#define SPI_NOR_HAS_SST26LOCK	SPI_NOR_HAS_LOCK
+#define SPI_NOR_4B_OPCODES	BIT(10)
+#define SPI_NOR_NO_ERASE	BIT(11)
+#define SPI_NOR_NO_FR		BIT(12)
+#define SPI_NOR_SKIP_SFDP	BIT(13)
+#define USE_CLSR			BIT(14)
+#define NO_CHIP_ERASE		BIT(15)
 };
 
 extern const struct spi_flash_info spi_flash_ids[];
