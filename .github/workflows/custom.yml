@@ -7,7 +7,7 @@ on:
         description: 'Device Model'
         required: true
         type: string
-        default: 'ZTE_E8820S'
+        default: 'gocloud'
       flash:
         description: 'Flash Type'
         required: true
@@ -26,7 +26,7 @@ on:
         description: 'Kernel Load Address'
         required: true
         type: string
-        default: '0x140000'
+        default: '0x200000'
       gpio_config:
         description: 'GPIO Config (format: reset_pin,sysled_pin)'
         required: true
